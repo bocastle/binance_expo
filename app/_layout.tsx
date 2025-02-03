@@ -34,7 +34,8 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
-
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+  console.log("apiUrl env 확인", apiUrl);
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <QueryClientProvider client={queryClient}>
