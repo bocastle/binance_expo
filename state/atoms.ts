@@ -1,6 +1,28 @@
+import { Coin } from "@/models/Coin";
 import { atom } from "recoil";
 
-export const coinListState = atom({
+export const coinListState = atom<Coin[]>({
   key: "coinListState", // key
-  default: [{ coin: { 1: "이더리움", 2: "리플", 3: "도지", 4: "비트" } }], //초기값
+  default: [
+    {
+      id: "1",
+      name: "이더리움",
+      price: "1000",
+    },
+    {
+      id: "2",
+      name: "리플",
+      price: "2000",
+    },
+    {
+      id: "3",
+      name: "도지",
+      price: "3000",
+    },
+    {
+      id: "4",
+      name: "비트",
+      price: "4000",
+    },
+  ], //초기값
 });
