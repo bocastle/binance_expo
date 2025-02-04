@@ -1,5 +1,6 @@
+import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { StyleSheet, useColorScheme, View } from "react-native";
 
 export default function TabMarketsScreen() {
   const BINANCE_API_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -13,7 +14,7 @@ export default function TabMarketsScreen() {
   return (
     <View style={{ ...styles.container, backgroundColor: backgroundColor }}>
       <View style={{ flex: 1 }}>
-        <Text>Tab Markets</Text>
+        <ThemedText>Tab Markets</ThemedText>
       </View>
     </View>
   );

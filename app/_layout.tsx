@@ -52,7 +52,7 @@ export default function RootLayout() {
             <StatusBar
               style={Platform.select({
                 ios: colorScheme === "dark" ? "light" : "dark",
-                android: colorScheme ?? "auto",
+                android: "dark",
               })}
             />
           </RecoilRoot>
