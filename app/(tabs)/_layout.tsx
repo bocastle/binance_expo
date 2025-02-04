@@ -7,10 +7,12 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
+  const insets = useSafeAreaInsets();
   return (
     <Tabs
       screenOptions={{
@@ -23,6 +25,7 @@ export default function TabLayout() {
             // Use a transparent background on iOS to show the blur effect
             position: "absolute",
             height: 56,
+            paddingBottom: insets.bottom,
           },
           default: {
             height: 56,
