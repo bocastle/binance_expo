@@ -1,27 +1,26 @@
-import { Image, StyleSheet } from "react-native";
-
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { StyleSheet, Text, useColorScheme, View } from "react-native";
 
 export default function TabMarketsScreen() {
+  const BINANCE_API_URL = process.env.EXPO_PUBLIC_API_URL;
+  // console.log("BINANCE_API_URL:::", BINANCE_API_URL);
+  const colorScheme = useColorScheme();
+  const backgroundColor = useThemeColor(
+    { light: colorScheme ?? undefined, dark: colorScheme ?? undefined },
+    "background"
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
-    ></ParallaxScrollView>
+    <View style={{ ...styles.container, backgroundColor: backgroundColor }}>
+      <View style={{ flex: 1 }}>
+        <Text>Tab Markets</Text>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
+  container: {
+    flex: 1,
   },
 });
