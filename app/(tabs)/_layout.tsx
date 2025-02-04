@@ -22,8 +22,11 @@ export default function TabLayout() {
           ios: {
             // Use a transparent background on iOS to show the blur effect
             position: "absolute",
+            height: 56,
           },
-          default: {},
+          default: {
+            height: 56,
+          },
         }),
       }}
     >
@@ -32,7 +35,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <IconSymbol size={24} name="house.fill" color={color} />
           ),
         }}
       />
@@ -41,7 +44,7 @@ export default function TabLayout() {
         options={{
           title: "Markets",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="chart.bar.fill" color={color} />
+            <IconSymbol size={24} name="chart.bar.fill" color={color} />
           ),
         }}
       />
@@ -50,7 +53,7 @@ export default function TabLayout() {
         options={{
           title: "Trade",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="arrow.swap" color={color} />
+            <IconSymbol size={24} name="arrow.swap" color={color} />
           ),
         }}
       />
@@ -59,7 +62,7 @@ export default function TabLayout() {
         options={{
           title: "Futures",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="clock.arrow.circlepath" color={color} />
+            <IconSymbol size={24} name="clock.arrow.circlepath" color={color} />
           ),
         }}
       />
@@ -68,7 +71,7 @@ export default function TabLayout() {
         options={{
           title: "Assets",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="briefcase.fill" color={color} />
+            <IconSymbol size={24} name="briefcase.fill" color={color} />
           ),
         }}
       />
