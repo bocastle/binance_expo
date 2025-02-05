@@ -66,7 +66,7 @@ export default function TabMarketsScreen() {
         justifyContent: "space-between",
         paddingVertical: 10,
         paddingHorizontal: 16,
-        backgroundColor: "#f8f9fa",
+        backgroundColor: backgroundColor,
         borderBottomWidth: 1,
         borderBottomColor: "#ddd",
       }}
@@ -76,6 +76,24 @@ export default function TabMarketsScreen() {
     </View>
   );
 
+  const renderItem = (item: ResponseValue) => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingVertical: 10,
+          paddingHorizontal: 16,
+          backgroundColor: backgroundColor,
+          borderBottomWidth: 1,
+          borderBottomColor: "#ddd",
+        }}
+      >
+        <ThemedText>{item.symbol}</ThemedText>
+        <ThemedText>{item.lastPrice}</ThemedText>
+      </View>
+    );
+  };
   return (
     <View style={{ ...styles.container, backgroundColor: backgroundColor }}>
       <View style={{ flex: 1 }}>
@@ -83,22 +101,7 @@ export default function TabMarketsScreen() {
         {renderHeader()}
         <FlatList
           data={data}
-          renderItem={({ item }) => (
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingVertical: 10,
-                paddingHorizontal: 16,
-                backgroundColor: "#f8f9fa",
-                borderBottomWidth: 1,
-                borderBottomColor: "#ddd",
-              }}
-            >
-              <ThemedText>{item.symbol}</ThemedText>
-              <ThemedText>{item.lastPrice}</ThemedText>
-            </View>
-          )}
+          renderItem={({ item }) => renderItem(item)}
           keyExtractor={(item) => item.symbol}
           contentContainerStyle={{ paddingTop: 0 }}
           onRefresh={handleRefresh}
