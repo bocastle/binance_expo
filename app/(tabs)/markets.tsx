@@ -1,30 +1,11 @@
+import { fetchBinanceData } from "@/api/binanceApi";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { Ticker24hr } from "@/models/Coin";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
 
-interface ResponseValue {
-  symbol: string; // Symbol Name
-  openPrice: string; // Opening price of the Interval
-  highPrice: string; // Highest price in the interval
-  lowPrice: string; // Lowest  price in the interval
-  lastPrice: string; // Closing price of the interval
-  volume: string; // Total trade volume (in base asset)
-  quoteVolume: string; // Total trade volume (in quote asset)
-  openTime: number; // Start of the ticker interval
-  closeTime: number; // End of the ticker interval
-  firstId: number; // First tradeId considered
-  lastId: number; // Last tradeId considered
-  count: number; // Total trade count
-}
-
-const fetchBinanceData = async () => {
-  const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}/api/v3/ticker/24hr?type=MINI`;
-  const res = await fetch(apiUrl);
-
-  return res.json();
-};
 export default function TabMarketsScreen() {
   const queryClient = useQueryClient();
   const colorScheme = useColorScheme();
@@ -33,12 +14,10 @@ export default function TabMarketsScreen() {
     "background"
   );
   const [refreshing, setRefreshing] = useState(false);
-  const { data, isLoading, error, isStale, refetch } = useQuery<
-    ResponseValue[]
-  >({
-    queryKey: ["binanceTicker"],
-    queryFn: async () => fetchBinanceData(),
-    staleTime: 1000 * 10,
+  const { data, isLoading, error, isStale, refetch } = useQuery<Ticker24hr[]>({
+    queryKey: ["binanceData"],
+    queryFn: fetchBinanceData,
+    staleTime: 1000 * 50,
     structuralSharing: true,
   });
 
@@ -76,7 +55,7 @@ export default function TabMarketsScreen() {
     </View>
   );
 
-  const renderItem = (item: ResponseValue) => {
+  const renderItem = (item: Ticker24hr) => {
     return (
       <View
         style={{
@@ -94,6 +73,8 @@ export default function TabMarketsScreen() {
       </View>
     );
   };
+
+  // console.log("data", data);
   return (
     <View style={{ ...styles.container, backgroundColor: backgroundColor }}>
       <View style={{ flex: 1 }}>
