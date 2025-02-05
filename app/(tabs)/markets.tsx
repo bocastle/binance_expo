@@ -1,7 +1,7 @@
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
 
 interface ResponseValue {
@@ -26,12 +26,13 @@ const fetchBinanceData = async () => {
   return res.json();
 };
 export default function TabMarketsScreen() {
+  const queryClient = useQueryClient();
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor(
     { light: colorScheme ?? undefined, dark: colorScheme ?? undefined },
     "background"
   );
-
+  const [refreshing, setRefreshing] = useState(false);
   const { data, isLoading, error, isStale, refetch } = useQuery<
     ResponseValue[]
   >({
@@ -50,19 +51,58 @@ export default function TabMarketsScreen() {
   if (isLoading) return <ThemedText>Loading...</ThemedText>;
   if (error) return <ThemedText>Error: {error.message}</ThemedText>;
 
+  // 새로고침 기능
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      queryClient.invalidateQueries({ queryKey: ["binanceData"] });
+      setRefreshing(false);
+    }, 1000);
+  };
+  const renderHeader = () => (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        backgroundColor: "#f8f9fa",
+        borderBottomWidth: 1,
+        borderBottomColor: "#ddd",
+      }}
+    >
+      <ThemedText>심볼명</ThemedText>
+      <ThemedText>가격 (USDT)</ThemedText>
+    </View>
+  );
+
   return (
     <View style={{ ...styles.container, backgroundColor: backgroundColor }}>
       <View style={{ flex: 1 }}>
         <ThemedText>Tab Markets</ThemedText>
-
+        {renderHeader()}
         <FlatList
           data={data}
           renderItem={({ item }) => (
-            <ThemedText>
-              {item.symbol}: {item.lastPrice}
-            </ThemedText>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingVertical: 10,
+                paddingHorizontal: 16,
+                backgroundColor: "#f8f9fa",
+                borderBottomWidth: 1,
+                borderBottomColor: "#ddd",
+              }}
+            >
+              <ThemedText>{item.symbol}</ThemedText>
+              <ThemedText>{item.lastPrice}</ThemedText>
+            </View>
           )}
           keyExtractor={(item) => item.symbol}
+          contentContainerStyle={{ paddingTop: 0 }}
+          onRefresh={handleRefresh}
+          refreshing={refreshing}
         />
       </View>
     </View>
