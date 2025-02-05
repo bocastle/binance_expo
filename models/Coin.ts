@@ -13,8 +13,9 @@ export class Coin {
 export interface Ticker24hr {
   symbol: string; // Symbol Name
   openPrice: string; // Opening price of the Interval
-  priceChange: string;
-  priceChangePercent: string;
+  priceChange: string; // Absolute price change
+  priceChangePercent: string; // Relative price change in percent
+  weightedAvgPrice: string; // QuoteVolume / Volume
   lastPrice: string; // Closing price of the interval
   highPrice: string; // Highest price in the interval
   lowPrice: string; // Lowest  price in the interval
