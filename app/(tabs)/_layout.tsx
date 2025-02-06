@@ -58,6 +58,12 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <IconSymbol size={24} name="arrow.swap" color={color} />
           ),
+          href: {
+            pathname: "/trade",
+            params: {
+              symbol: null,
+            },
+          },
         }}
       />
       <Tabs.Screen

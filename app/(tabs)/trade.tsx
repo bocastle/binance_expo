@@ -1,8 +1,11 @@
 import { Image, StyleSheet } from "react-native";
 
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { useLocalSearchParams } from "expo-router";
 
 export default function TabTradeScreen() {
+  const { symbol } = useLocalSearchParams<{ symbol?: string }>();
+  console.log("symbol", symbol);
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}

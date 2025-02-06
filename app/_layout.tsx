@@ -47,6 +47,10 @@ export default function RootLayout() {
           <RecoilRoot>
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="symbolChart"
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name="+not-found" />
             </Stack>
             <StatusBar

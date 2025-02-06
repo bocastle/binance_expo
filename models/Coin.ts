@@ -10,6 +10,13 @@ export class Coin {
     this.price = price;
   }
 }
+export class SelectSymbol {
+  name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+}
 export interface Ticker24hr {
   symbol: string; // Symbol Name
   openPrice: string; // Opening price of the Interval

@@ -69,7 +69,7 @@ export default function MarketsScreen() {
         {Ticker24hrArray && (
           <FlatList
             data={Ticker24hrArray}
-            renderItem={({ item }) => MarketItem(item)}
+            renderItem={({ item }) => <MarketItem item={item} />}
             keyExtractor={(item) => item.symbol}
             contentContainerStyle={{ paddingTop: 0, paddingBottom: 50 }}
             onRefresh={handleRefresh}
