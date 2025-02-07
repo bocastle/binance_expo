@@ -1,6 +1,5 @@
-import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { useColorScheme, View } from "react-native";
+import { Text, useColorScheme, View } from "react-native";
 
 const MarketListHeader = () => {
   const colorScheme = useColorScheme();
@@ -13,17 +12,32 @@ const MarketListHeader = () => {
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        paddingVertical: 10,
+        paddingVertical: 8,
         paddingHorizontal: 16,
         backgroundColor: backgroundColor,
         borderBottomWidth: 1,
         borderBottomColor: "#ddd",
       }}
     >
-      <ThemedText>name</ThemedText>
-      <ThemedText>Vol</ThemedText>
-      <ThemedText>Last Price</ThemedText>
-      <ThemedText>24h chg%</ThemedText>
+      <View style={{ flexDirection: "row", gap: 3 }}>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={{ fontSize: 12, color: "gray" }}>Name</Text>
+        </View>
+        <View>
+          <Text style={{ fontSize: 12, color: "gray" }}>/</Text>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={{ fontSize: 12, color: "gray" }}>Vol</Text>
+        </View>
+      </View>
+      <View style={{ flexDirection: "row", gap: 20 }}>
+        <View>
+          <Text style={{ fontSize: 12, color: "gray" }}>Last Price</Text>
+        </View>
+        <View>
+          <Text style={{ fontSize: 12, color: "gray" }}>24h chg%</Text>
+        </View>
+      </View>
     </View>
   );
 };
