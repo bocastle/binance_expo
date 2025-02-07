@@ -57,24 +57,6 @@ export default function TabLayout() {
           },
         }}
       />
-      <Tabs.Screen
-        name="futures"
-        options={{
-          title: "Futures",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={24} name="clock.arrow.circlepath" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="assets"
-        options={{
-          title: "Assets",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={24} name="briefcase.fill" color={color} />
-          ),
-        }}
-      />
     </Tabs>
   );
 }
