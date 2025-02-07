@@ -1,3 +1,4 @@
+import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Text, useColorScheme, View } from "react-native";
 
@@ -20,8 +21,16 @@ const MarketListHeader = () => {
       }}
     >
       <View style={{ flexDirection: "row", gap: 3 }}>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text style={{ fontSize: 12, color: "gray" }}>Name</Text>
+          <View style={{ flexDirection: "column" }}>
+            <View>
+              <IconSymbol size={6} name="arrow.up" color={"#191919"} />
+            </View>
+            <View>
+              <IconSymbol size={6} name="arrow.down" color={"#191919"} />
+            </View>
+          </View>
         </View>
         <View>
           <Text style={{ fontSize: 12, color: "gray" }}>/</Text>
