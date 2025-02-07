@@ -452,11 +452,21 @@ export default function TradeScreen() {
                   Price({symbol?.split("/")[1]})
                 </Text>
                 <TextInput
+                  keyboardType="numeric"
                   style={{
                     color: "#191919",
                     fontWeight: "600",
                     fontSize: 14,
                   }}
+                  onChangeText={(item) => {
+                    const regExp = /[a-z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;
+                    let isMatch = !regExp.test(item);
+
+                    if (isMatch) {
+                      setPrice(Number(item));
+                    }
+                  }}
+                  defaultValue={String(price)}
                   value={String(price)}
                 />
               </View>
