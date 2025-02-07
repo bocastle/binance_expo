@@ -1,13 +1,17 @@
-import { fetchBinanceAvgPrice } from "@/api/binanceApi";
+import {
+  fetchBinanceAvgPrice,
+  fetchBinanceDepth,
+  fetchBinanceTrades,
+} from "@/api/binanceApi";
 import ArrowDropDown from "@/assets/icon/arrow_drop.svg";
 import InfoIcon from "@/assets/icon/infoIcon.svg";
 import PlusIcon from "@/assets/icon/plus.svg";
 import StraightLine from "@/assets/icon/straight_line.svg";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { AvgPrice } from "@/models/Coin";
+import { AvgPrice, Depth, Trades } from "@/models/Coin";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -24,10 +28,34 @@ export default function TradeScreen() {
     "background"
   );
   const { symbol } = useLocalSearchParams<{ symbol: string }>();
-  const { data, isLoading, error, isStale, refetch } = useQuery<AvgPrice>({
+  const { data } = useQuery<AvgPrice>({
     queryKey: ["binanceAvgPrice"],
     queryFn: () => fetchBinanceAvgPrice(symbol),
     staleTime: 1000 * 60,
+    structuralSharing: true,
+  });
+  const {
+    data: depthdata,
+    isLoading,
+    error,
+    isStale: depthdataIsStale,
+    refetch: depthdataRefetch,
+  } = useQuery<Depth>({
+    queryKey: ["binanceDepth"],
+    queryFn: () => fetchBinanceDepth(symbol),
+    staleTime: 1000 * 10,
+    structuralSharing: true,
+  });
+  const {
+    data: tradesData,
+    isLoading: tradesIsLoading,
+    error: tradesError,
+    isStale: tradesIsStale,
+    refetch: tradesRefetch,
+  } = useQuery<Trades[]>({
+    queryKey: ["binanceTrades"],
+    queryFn: () => fetchBinanceTrades(symbol),
+    staleTime: 1000 * 10,
     structuralSharing: true,
   });
   const [tradeType, setTradeType] = useState<"Buy" | "Sell">("Buy");
@@ -43,6 +71,41 @@ export default function TradeScreen() {
     },
     [price]
   );
+  const bids = useMemo(() => {
+    const list = depthdata?.bids.map((key) => {
+      return {
+        qty: Number(key[1]).toFixed(5),
+        price: Number(key[0]).toFixed(2),
+      };
+    });
+
+    return list;
+  }, [depthdata]);
+  const asks = useMemo(() => {
+    const list = depthdata?.asks.map((key) => {
+      return {
+        qty: Number(key[1]).toFixed(5),
+        price: Number(key[0]).toFixed(2),
+      };
+    });
+
+    return list;
+  }, [depthdata]);
+  const tradesInfo = useMemo(() => {
+    const list = tradesData?.map((key) => {
+      return {
+        id: key.id,
+        price: Number(key.price).toFixed(2),
+        qty: key.qty,
+        quoteQty: key.quoteQty,
+        time: key.time,
+        isBuyerMaker: key.isBuyerMaker,
+        isBestMatch: key.isBestMatch,
+      };
+    });
+
+    return list;
+  }, [tradesData]);
 
   useEffect(() => {
     if (data) {
@@ -50,6 +113,18 @@ export default function TradeScreen() {
       setPrice(Number(transPrice));
     }
   }, [data]);
+
+  useEffect(() => {
+    if (tradesIsStale) {
+      tradesRefetch();
+    }
+  }, [tradesIsStale]);
+  useEffect(() => {
+    if (depthdataIsStale) {
+      depthdataRefetch();
+    }
+  }, [depthdataIsStale]);
+
   return (
     <View style={{ ...styles.container, backgroundColor: backgroundColor }}>
       <View style={{ flex: 1 }}>
@@ -64,10 +139,176 @@ export default function TradeScreen() {
             flexDirection: "row",
             justifyContent: "space-between",
             paddingHorizontal: 16,
+            gap: 10,
           }}
         >
-          <View style={{ flex: 1 }}>
-            <Text>1</Text>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: 5,
+            }}
+          >
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <View style={{ flexDirection: "column" }}>
+                <Text
+                  style={{
+                    color: "#b8b5b5",
+                    fontWeight: "600",
+                    fontSize: 10,
+                  }}
+                >
+                  Price
+                </Text>
+                <Text
+                  style={{
+                    color: "#b8b5b5",
+                    fontWeight: "600",
+                    fontSize: 10,
+                  }}
+                >
+                  ({symbol?.split("/")[1]})
+                </Text>
+              </View>
+              <View style={{ flexDirection: "column" }}>
+                <Text
+                  style={{
+                    color: "#b8b5b5",
+                    fontWeight: "600",
+                    fontSize: 10,
+                  }}
+                >
+                  Amount
+                </Text>
+                <Text
+                  style={{
+                    color: "#b8b5b5",
+                    fontWeight: "600",
+                    fontSize: 10,
+                  }}
+                >
+                  ({symbol?.split("/")[0]})
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                backgroundColor:
+                  tradesInfo && tradesInfo[0].isBuyerMaker
+                    ? "#f7afaf"
+                    : "transparent",
+              }}
+            >
+              {bids?.map((item, index) => {
+                return (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={{ justifyContent: "flex-start" }}
+                      onPress={() => {
+                        setPrice(Number(item.price));
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#da5e5e",
+                          fontWeight: "600",
+                          fontSize: 10,
+                        }}
+                      >
+                        {item.price}
+                      </Text>
+                    </TouchableOpacity>
+                    <View style={{ justifyContent: "flex-end" }}>
+                      <Text
+                        style={{
+                          color: "#424141",
+                          fontWeight: "600",
+                          fontSize: 10,
+                        }}
+                      >
+                        {item.qty}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+            {tradesInfo && (
+              <TouchableOpacity
+                style={{ justifyContent: "center", alignItems: "center" }}
+                onPress={() => {
+                  setPrice(Number(tradesInfo[0].price));
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "600",
+                    color: tradesInfo[0].isBuyerMaker ? "#b33d3d" : "#3d725a",
+                  }}
+                >
+                  {tradesInfo[0].price}
+                </Text>
+                <Text>= ${tradesInfo && tradesInfo[0].price}</Text>
+              </TouchableOpacity>
+            )}
+            <View
+              style={{
+                backgroundColor:
+                  tradesInfo && !tradesInfo[0].isBuyerMaker
+                    ? "#e0edd3"
+                    : "transparent",
+              }}
+            >
+              {asks?.map((item, index) => {
+                return (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={{ justifyContent: "flex-start" }}
+                      onPress={() => {
+                        setPrice(Number(item.price));
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#75c780",
+                          fontWeight: "600",
+                          fontSize: 10,
+                        }}
+                      >
+                        {item.price}
+                      </Text>
+                    </TouchableOpacity>
+                    <View style={{ justifyContent: "flex-end" }}>
+                      <Text
+                        style={{
+                          color: "#75c780",
+                          fontWeight: "600",
+                          fontSize: 10,
+                        }}
+                      >
+                        {item.qty}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
           </View>
           <View style={{ flex: 2, gap: 4 }}>
             <View

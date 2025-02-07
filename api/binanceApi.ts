@@ -1,4 +1,4 @@
-import { AvgPrice, Ticker24hr } from "@/models/Coin";
+import { AvgPrice, Depth, Ticker24hr, Trades } from "@/models/Coin";
 import { apiClient } from "./fetchConfig";
 
 export const fetchBinanceData = async (): Promise<Ticker24hr[]> => {
@@ -15,8 +15,21 @@ export const fetchBinanceChartData = async (
 export const fetchBinanceAvgPrice = async (
   searchQuery: string
 ): Promise<AvgPrice> => {
-  console.log("searchQuery::", searchQuery);
-  return apiClient.get<any>(
+  return apiClient.get<AvgPrice>(
     `/api/v3/avgPrice?symbol=${searchQuery.replace("/", "")}`
+  );
+};
+export const fetchBinanceDepth = async (
+  searchQuery: string
+): Promise<Depth> => {
+  return apiClient.get<Depth>(
+    `/api/v3/depth?symbol=${searchQuery.replace("/", "")}&limit=7`
+  );
+};
+export const fetchBinanceTrades = async (
+  searchQuery: string
+): Promise<Trades[]> => {
+  return apiClient.get<Trades[]>(
+    `/api/v3/trades?symbol=${searchQuery.replace("/", "")}&limit=1`
   );
 };

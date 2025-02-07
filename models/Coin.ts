@@ -62,3 +62,17 @@ export interface AvgPrice {
   price: string; // Average price
   closeTime: number; // Last trade time
 }
+export interface Depth {
+  lastUpdateId: number;
+  bids: [string[]];
+  asks: [string[]];
+}
+export interface Trades {
+  id: number;
+  price: string;
+  qty: string;
+  quoteQty: string;
+  time: number;
+  isBuyerMaker: true;
+  isBestMatch: true;
+}
