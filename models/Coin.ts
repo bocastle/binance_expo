@@ -1,4 +1,8 @@
-import { TCoinListFilterKey, TOrderByKeys } from "@/constants/Constants";
+import {
+  CoinTapKey,
+  TCoinListFilterKey,
+  TOrderByKeys,
+} from "@/constants/Constants";
 
 //나중에 추가하더라도 Coin 객체 형대로 수정
 export class Coin {
@@ -16,6 +20,13 @@ export class SelectSymbol {
   name: string;
 
   constructor(name: string) {
+    this.name = name;
+  }
+}
+export class SelectCoinTap {
+  name: keyof typeof CoinTapKey;
+
+  constructor(name: keyof typeof CoinTapKey) {
     this.name = name;
   }
 }

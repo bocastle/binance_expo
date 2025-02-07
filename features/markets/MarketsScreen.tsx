@@ -7,6 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
 import { useRecoilValue } from "recoil";
+import CoinTapHeader from "./components/CoinTapHeader";
 import MarketItem from "./components/MarketList";
 import MarketListHeader from "./components/MarketListHeader";
 
@@ -99,7 +100,7 @@ export default function MarketsScreen() {
     <View style={{ ...styles.container, backgroundColor: backgroundColor }}>
       <View style={{ flex: 1 }}>
         <ThemedText>Search Coin Paris</ThemedText>
-
+        <CoinTapHeader />
         <MarketListHeader />
         {Ticker24hrArray && (
           <FlatList

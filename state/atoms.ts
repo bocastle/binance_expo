@@ -1,4 +1,9 @@
-import { Coin, CoinListFilter, SelectSymbol } from "@/models/Coin";
+import {
+  Coin,
+  CoinListFilter,
+  SelectCoinTap,
+  SelectSymbol,
+} from "@/models/Coin";
 import { atom } from "recoil";
 
 export const coinListState = atom<Coin[]>({
@@ -33,5 +38,10 @@ export const selectSymbolState = atom<SelectSymbol>({
 
 export const coinListFilterState = atom<CoinListFilter>({
   key: "coinListFilterState", // key
+  default: undefined, //초기값
+});
+
+export const selectCoinTapState = atom<SelectCoinTap>({
+  key: "selectCoinTapState", // key
   default: undefined, //초기값
 });
