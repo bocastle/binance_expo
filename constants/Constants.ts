@@ -10,3 +10,9 @@ export const CoinTapKey = {
   BTC: "BTC" as const,
   ALTS: "ALTS" as const,
 };
+export const TradeTapKey = {
+  CONVERT: "Convert" as const,
+  SPOT: "Spot" as const,
+  MARGIN: "Margin" as const,
+  BUYSELL: "Buy/Sell" as const,
+};

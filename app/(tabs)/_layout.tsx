@@ -52,7 +52,7 @@ export default function TabLayout() {
           href: {
             pathname: "/trade",
             params: {
-              symbol: null,
+              symbol: "BTC/USDT",
             },
           },
         }}
