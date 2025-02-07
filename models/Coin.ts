@@ -57,3 +57,8 @@ export interface Ticker24hr {
   count: number; // Total trade count
 }
 export interface KLines {}
+export interface AvgPrice {
+  mins: number; // Average price interval (in minutes)
+  price: string; // Average price
+  closeTime: number; // Last trade time
+}

@@ -1,10 +1,13 @@
+import { fetchBinanceAvgPrice } from "@/api/binanceApi";
 import ArrowDropDown from "@/assets/icon/arrow_drop.svg";
 import InfoIcon from "@/assets/icon/infoIcon.svg";
 import PlusIcon from "@/assets/icon/plus.svg";
 import StraightLine from "@/assets/icon/straight_line.svg";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { AvgPrice } from "@/models/Coin";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -20,8 +23,13 @@ export default function TradeScreen() {
     { light: colorScheme ?? undefined, dark: colorScheme ?? undefined },
     "background"
   );
-  const { symbol } = useLocalSearchParams<{ symbol?: string }>();
-
+  const { symbol } = useLocalSearchParams<{ symbol: string }>();
+  const { data, isLoading, error, isStale, refetch } = useQuery<AvgPrice>({
+    queryKey: ["binanceAvgPrice"],
+    queryFn: () => fetchBinanceAvgPrice(symbol),
+    staleTime: 1000 * 60,
+    structuralSharing: true,
+  });
   const [tradeType, setTradeType] = useState<"Buy" | "Sell">("Buy");
   const [price, setPrice] = useState<number>(0);
   const handleSelect = useCallback(
@@ -35,6 +43,13 @@ export default function TradeScreen() {
     },
     [price]
   );
+
+  useEffect(() => {
+    if (data) {
+      let transPrice = Number(data.price).toFixed(2);
+      setPrice(Number(transPrice));
+    }
+  }, [data]);
   return (
     <View style={{ ...styles.container, backgroundColor: backgroundColor }}>
       <View style={{ flex: 1 }}>
