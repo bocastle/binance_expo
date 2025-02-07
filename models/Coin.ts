@@ -56,3 +56,4 @@ export interface Ticker24hr {
   lastId: number; // Last tradeId considered
   count: number; // Total trade count
 }
+export interface KLines {}
