@@ -1,3 +1,5 @@
+import { TCoinListFilterKey, TOrderByKeys } from "@/constants/Constants";
+
 //나중에 추가하더라도 Coin 객체 형대로 수정
 export class Coin {
   id: string;
@@ -15,6 +17,15 @@ export class SelectSymbol {
 
   constructor(name: string) {
     this.name = name;
+  }
+}
+export class CoinListFilter {
+  name: TCoinListFilterKey;
+  orderBy: TOrderByKeys;
+
+  constructor(name: TCoinListFilterKey, orderBy: TOrderByKeys) {
+    this.name = name;
+    this.orderBy = orderBy;
   }
 }
 export interface Ticker24hr {
