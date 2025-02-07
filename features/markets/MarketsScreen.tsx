@@ -2,13 +2,16 @@ import { fetchBinanceData } from "@/api/binanceApi";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Ticker24hr } from "@/models/Coin";
+import { coinListFilterState } from "@/state/atoms";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
+import { useRecoilValue } from "recoil";
 import MarketItem from "./components/MarketList";
 import MarketListHeader from "./components/MarketListHeader";
 
 export default function MarketsScreen() {
+  const coinListFilter = useRecoilValue(coinListFilterState);
   const queryClient = useQueryClient();
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor(
@@ -31,11 +34,43 @@ export default function MarketsScreen() {
 
   const Ticker24hrArray = useMemo(() => {
     // console.log("data", data);
+
     if (data === undefined) return;
     let array: Ticker24hr[] = data
       .sort((a, b) => {
-        // return Number(a.quoteVolume) - Number(b.quoteVolume);
-        return Number(b.quoteVolume) - Number(a.quoteVolume);
+        switch (coinListFilter?.name) {
+          case "NAME":
+            if (coinListFilter.orderBy === "ASD") {
+              return a.symbol > b.symbol ? 1 : -1;
+            } else {
+              return a.symbol < b.symbol ? 1 : -1;
+            }
+          case "VOL":
+            if (coinListFilter.orderBy === "ASD") {
+              return Number(a.quoteVolume) - Number(b.quoteVolume);
+            } else {
+              return Number(b.quoteVolume) - Number(a.quoteVolume);
+            }
+          case "LASTPRICE":
+            if (coinListFilter.orderBy === "ASD") {
+              return Number(a.lastPrice) - Number(b.lastPrice);
+            } else {
+              return Number(b.lastPrice) - Number(a.lastPrice);
+            }
+          case "CHG":
+            if (coinListFilter.orderBy === "ASD") {
+              return (
+                Number(a.priceChangePercent) - Number(b.priceChangePercent)
+              );
+            } else {
+              return (
+                Number(b.priceChangePercent) - Number(a.priceChangePercent)
+              );
+            }
+
+          default:
+            return Number(b.quoteVolume) - Number(a.quoteVolume);
+        }
       })
       .reduce((acc, curr) => {
         if (curr.symbol.endsWith("USDT") && Number(curr.quoteVolume) !== 0) {
@@ -45,7 +80,7 @@ export default function MarketsScreen() {
       }, [] as Ticker24hr[]);
 
     return array;
-  }, [data]);
+  }, [data, coinListFilter]);
 
   if (isLoading) return <ThemedText>Loading...</ThemedText>;
   if (error) return <ThemedText>Error: {error.message}</ThemedText>;
