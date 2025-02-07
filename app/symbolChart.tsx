@@ -2,16 +2,16 @@ import { router } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
+import ArrowBack from "@/assets/icon/arrow_back.svg";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
 import { selectSymbolState } from "@/state/atoms";
-import { useRecoilValue } from "recoil";
 
+import { useRecoilValue } from "recoil";
 export default function SymbolChartScreen() {
   const selectSymbol = useRecoilValue(selectSymbolState);
 
-  console.log("selectSymbol", selectSymbol);
+  // console.log("selectSymbol", selectSymbol);
   return (
     <ThemedView style={styles.container}>
       <View
@@ -25,7 +25,7 @@ export default function SymbolChartScreen() {
             router.back();
           }}
         >
-          <IconSymbol size={24} name="arrow.backward" color={"#191919"} />
+          <ArrowBack width={24} height={24} />
         </TouchableOpacity>
         <ThemedText type="title">{selectSymbol.name}</ThemedText>
       </View>
