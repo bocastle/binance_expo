@@ -1,16 +1,17 @@
 import { Ticker24hr } from "@/models/Coin";
-import { selectSymbolState } from "@/state/atoms";
+import { selectCoinTapState, selectSymbolState } from "@/state/atoms";
 import { router } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface MarketListProps {
   item: Ticker24hr;
 }
 
 const MarketItem = ({ item }: MarketListProps) => {
+  const selectCoinTap = useRecoilValue(selectCoinTapState);
   const setSelectSymbol = useSetRecoilState(selectSymbolState);
   const handleSelect = () => {
     // console.log("item", item);
@@ -32,14 +33,16 @@ const MarketItem = ({ item }: MarketListProps) => {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
           <View>
             <Text style={{ fontSize: 16, color: "#191919", fontWeight: "600" }}>
-              {item.symbol.replace("USDT", "")}
+              {item.symbol.replace(selectCoinTap.name, "")}
             </Text>
           </View>
           <View>
             <Text style={{ fontSize: 10, color: "gray" }}>/</Text>
           </View>
           <View>
-            <Text style={{ fontSize: 10, color: "gray" }}>USDT</Text>
+            <Text style={{ fontSize: 10, color: "gray" }}>
+              {selectCoinTap.name}
+            </Text>
           </View>
         </View>
         <View style={{ flexDirection: "row" }}>

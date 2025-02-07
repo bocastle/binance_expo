@@ -43,5 +43,5 @@ export const coinListFilterState = atom<CoinListFilter>({
 
 export const selectCoinTapState = atom<SelectCoinTap>({
   key: "selectCoinTapState", // key
-  default: undefined, //초기값
+  default: { name: "USDT" }, //초기값
 });

@@ -2,7 +2,7 @@ import { fetchBinanceData } from "@/api/binanceApi";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Ticker24hr } from "@/models/Coin";
-import { coinListFilterState } from "@/state/atoms";
+import { coinListFilterState, selectCoinTapState } from "@/state/atoms";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
@@ -13,6 +13,7 @@ import MarketListHeader from "./components/MarketListHeader";
 
 export default function MarketsScreen() {
   const coinListFilter = useRecoilValue(coinListFilterState);
+  const selectCoinTap = useRecoilValue(selectCoinTapState);
   const queryClient = useQueryClient();
   const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor(
@@ -74,14 +75,17 @@ export default function MarketsScreen() {
         }
       })
       .reduce((acc, curr) => {
-        if (curr.symbol.endsWith("USDT") && Number(curr.quoteVolume) !== 0) {
+        if (
+          curr.symbol.endsWith(selectCoinTap.name) &&
+          Number(curr.quoteVolume) !== 0
+        ) {
           acc.push(curr);
         }
         return acc;
       }, [] as Ticker24hr[]);
 
     return array;
-  }, [data, coinListFilter]);
+  }, [data, coinListFilter, selectCoinTap]);
 
   if (isLoading) return <ThemedText>Loading...</ThemedText>;
   if (error) return <ThemedText>Error: {error.message}</ThemedText>;

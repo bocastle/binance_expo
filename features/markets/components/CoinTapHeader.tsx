@@ -1,7 +1,7 @@
 import { CoinTapKey } from "@/constants/Constants";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { selectCoinTapState } from "@/state/atoms";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Text, TouchableOpacity, useColorScheme, View } from "react-native";
 import { useRecoilState } from "recoil";
 const CoinTapHeader = () => {
@@ -24,9 +24,44 @@ const CoinTapHeader = () => {
     });
 
     return list;
-  }, []);
-  console.log("coinTapList", coinTapList);
-  console.log("selectCoinTap", selectCoinTap);
+  }, [selectCoinTap]);
+
+  const RenderItem = useCallback(() => {
+    return coinTapList.map((item, index) => {
+      if (selectCoinTap?.name === item.value) {
+        return (
+          <TouchableOpacity
+            key={index}
+            style={{ flexDirection: "row", gap: 3 }}
+            onPress={() => handleSelect(item.value)}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+                color: "#191919",
+                fontWeight: "600",
+                backgroundColor: "#cccaca",
+                padding: 5,
+                borderRadius: 5,
+              }}
+            >
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      } else {
+        return (
+          <TouchableOpacity
+            key={index}
+            style={{ flexDirection: "row", gap: 3, padding: 5 }}
+            onPress={() => handleSelect(item.value)}
+          >
+            <Text style={{ fontSize: 12, color: "gray" }}>{item.label}</Text>
+          </TouchableOpacity>
+        );
+      }
+    });
+  }, [coinTapList, selectCoinTap]);
   return (
     <View
       style={{
@@ -39,40 +74,7 @@ const CoinTapHeader = () => {
         borderBottomColor: "#ddd",
       }}
     >
-      {coinTapList.map((item, index) => {
-        if (selectCoinTap?.name === item.value) {
-          return (
-            <TouchableOpacity
-              key={index}
-              style={{ flexDirection: "row", gap: 3 }}
-              onPress={() => handleSelect(item.value)}
-            >
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: "#191919",
-                  fontWeight: "600",
-                  backgroundColor: "#cccaca",
-                  padding: 5,
-                  borderRadius: 5,
-                }}
-              >
-                {item.label}
-              </Text>
-            </TouchableOpacity>
-          );
-        } else {
-          return (
-            <TouchableOpacity
-              key={index}
-              style={{ flexDirection: "row", gap: 3, padding: 5 }}
-              onPress={() => handleSelect(item.value)}
-            >
-              <Text style={{ fontSize: 12, color: "gray" }}>{item.label}</Text>
-            </TouchableOpacity>
-          );
-        }
-      })}
+      <RenderItem />
     </View>
   );
 };
