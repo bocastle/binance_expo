@@ -31,7 +31,7 @@ export const selectSymbolState = atom<SelectSymbol>({
   default: undefined, //초기값
 });
 
-export const coinListFilterState = atom<CoinListFilter[]>({
+export const coinListFilterState = atom<CoinListFilter>({
   key: "coinListFilterState", // key
-  default: [], //초기값
+  default: undefined, //초기값
 });
