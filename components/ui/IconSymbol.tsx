@@ -17,6 +17,7 @@ const MAPPING = {
   "briefcase.fill": "web-asset",
   "chevron.left.forwardslash.chevron.right": "code",
   "chevron.right": "chevron-right",
+  "arrow.back.fill": "arrow-back",
 } as Partial<
   Record<
     import("expo-symbols").SymbolViewProps["name"],

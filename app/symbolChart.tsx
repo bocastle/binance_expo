@@ -1,9 +1,10 @@
 import { router } from "expo-router";
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 import { selectSymbolState } from "@/state/atoms";
 import { useRecoilValue } from "recoil";
 
@@ -13,15 +14,23 @@ export default function SymbolChartScreen() {
   console.log("selectSymbol", selectSymbol);
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title">코인 차트 대기</ThemedText>
-      {/* <Link href="/" style={styles.link}> */}
-      <TouchableOpacity
-        onPress={() => {
-          router.back();
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 10,
         }}
       >
-        <ThemedText type="link">이전 페이지</ThemedText>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            router.back();
+          }}
+        >
+          <IconSymbol size={24} name="arrow.backward" color={"#191919"} />
+        </TouchableOpacity>
+        <ThemedText type="title">{selectSymbol.name}</ThemedText>
+      </View>
+      <ThemedText type="title">코인 차트 대기</ThemedText>
+      {/* <Link href="/" style={styles.link}> */}
     </ThemedView>
   );
 }
@@ -29,8 +38,8 @@ export default function SymbolChartScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
     padding: 20,
   },
   link: {
