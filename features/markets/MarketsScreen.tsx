@@ -10,6 +10,7 @@ import { useRecoilValue } from "recoil";
 import CoinTapHeader from "./components/CoinTapHeader";
 import MarketItem from "./components/MarketList";
 import MarketListHeader from "./components/MarketListHeader";
+import SearchCoinPairs from "./components/SearchCoinPairs";
 
 export default function MarketsScreen() {
   const coinListFilter = useRecoilValue(coinListFilterState);
@@ -21,10 +22,11 @@ export default function MarketsScreen() {
     "background"
   );
   const [refreshing, setRefreshing] = useState(false);
+
   const { data, isLoading, error, isStale, refetch } = useQuery<Ticker24hr[]>({
     queryKey: ["binanceData"],
     queryFn: fetchBinanceData,
-    staleTime: 1000 * 50,
+    staleTime: 1000 * 60,
     structuralSharing: true,
   });
 
@@ -103,7 +105,7 @@ export default function MarketsScreen() {
   return (
     <View style={{ ...styles.container, backgroundColor: backgroundColor }}>
       <View style={{ flex: 1 }}>
-        <ThemedText>Search Coin Paris</ThemedText>
+        <SearchCoinPairs />
         <CoinTapHeader />
         <MarketListHeader />
         {Ticker24hrArray && (
