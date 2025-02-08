@@ -3,23 +3,14 @@ import {
   fetchBinanceDepth,
   fetchBinanceTrades,
 } from "@/api/binanceApi";
-import ArrowDropDown from "@/assets/icon/arrow_drop.svg";
-import InfoIcon from "@/assets/icon/infoIcon.svg";
-import PlusIcon from "@/assets/icon/plus.svg";
-import StraightLine from "@/assets/icon/straight_line.svg";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { AvgPrice, Depth, Trades } from "@/models/Coin";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
+import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import TradeBuySell from "./components/TradeBuySell";
+import TradeDepthList from "./components/TradeDepthList";
 import TradeHeader from "./components/TradeHeader";
 export default function TradeScreen() {
   const colorScheme = useColorScheme();
@@ -36,8 +27,7 @@ export default function TradeScreen() {
   });
   const {
     data: depthdata,
-    isLoading,
-    error,
+
     isStale: depthdataIsStale,
     refetch: depthdataRefetch,
   } = useQuery<Depth>({
@@ -48,8 +38,7 @@ export default function TradeScreen() {
   });
   const {
     data: tradesData,
-    isLoading: tradesIsLoading,
-    error: tradesError,
+
     isStale: tradesIsStale,
     refetch: tradesRefetch,
   } = useQuery<Trades[]>({
@@ -142,343 +131,29 @@ export default function TradeScreen() {
             gap: 10,
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              justifyContent: "space-between",
-              gap: 5,
+          <TradeDepthList
+            symbol={symbol}
+            tradesInfo={tradesInfo ?? []}
+            bids={bids ?? []}
+            asks={asks ?? []}
+            setPrice={(e) => {
+              setPrice(e);
             }}
-          >
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <View style={{ flexDirection: "column" }}>
-                <Text
-                  style={{
-                    color: "#b8b5b5",
-                    fontWeight: "600",
-                    fontSize: 10,
-                  }}
-                >
-                  Price
-                </Text>
-                <Text
-                  style={{
-                    color: "#b8b5b5",
-                    fontWeight: "600",
-                    fontSize: 10,
-                  }}
-                >
-                  ({symbol?.split("/")[1]})
-                </Text>
-              </View>
-              <View style={{ flexDirection: "column" }}>
-                <Text
-                  style={{
-                    color: "#b8b5b5",
-                    fontWeight: "600",
-                    fontSize: 10,
-                  }}
-                >
-                  Amount
-                </Text>
-                <Text
-                  style={{
-                    color: "#b8b5b5",
-                    fontWeight: "600",
-                    fontSize: 10,
-                  }}
-                >
-                  ({symbol?.split("/")[0]})
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                backgroundColor:
-                  tradesInfo && tradesInfo[0].isBuyerMaker
-                    ? "#f7afaf"
-                    : "transparent",
-              }}
-            >
-              {bids?.map((item, index) => {
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <TouchableOpacity
-                      style={{ justifyContent: "flex-start" }}
-                      onPress={() => {
-                        setPrice(Number(item.price));
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "#da5e5e",
-                          fontWeight: "600",
-                          fontSize: 10,
-                        }}
-                      >
-                        {item.price}
-                      </Text>
-                    </TouchableOpacity>
-                    <View style={{ justifyContent: "flex-end" }}>
-                      <Text
-                        style={{
-                          color: "#424141",
-                          fontWeight: "600",
-                          fontSize: 10,
-                        }}
-                      >
-                        {item.qty}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-            {tradesInfo && (
-              <TouchableOpacity
-                style={{ justifyContent: "center", alignItems: "center" }}
-                onPress={() => {
-                  setPrice(Number(tradesInfo[0].price));
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "600",
-                    color: tradesInfo[0].isBuyerMaker ? "#b33d3d" : "#3d725a",
-                  }}
-                >
-                  {tradesInfo[0].price}
-                </Text>
-                <Text>= ${tradesInfo && tradesInfo[0].price}</Text>
-              </TouchableOpacity>
-            )}
-            <View
-              style={{
-                backgroundColor:
-                  tradesInfo && !tradesInfo[0].isBuyerMaker
-                    ? "#e0edd3"
-                    : "transparent",
-              }}
-            >
-              {asks?.map((item, index) => {
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <TouchableOpacity
-                      style={{ justifyContent: "flex-start" }}
-                      onPress={() => {
-                        setPrice(Number(item.price));
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "#75c780",
-                          fontWeight: "600",
-                          fontSize: 10,
-                        }}
-                      >
-                        {item.price}
-                      </Text>
-                    </TouchableOpacity>
-                    <View style={{ justifyContent: "flex-end" }}>
-                      <Text
-                        style={{
-                          color: "#75c780",
-                          fontWeight: "600",
-                          fontSize: 10,
-                        }}
-                      >
-                        {item.qty}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-          </View>
-          <View style={{ flex: 2, gap: 4 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                borderWidth: 2,
-                borderRadius: 5,
-                borderColor: "#dddfdd",
-                height: 30,
-              }}
-            >
-              <TouchableOpacity
-                style={
-                  tradeType === "Buy"
-                    ? {
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "#22a222",
-                        borderTopLeftRadius: 5,
-                        borderBottomLeftRadius: 5,
-                        borderTopRightRadius: 50,
-                        borderBottomRightRadius: 50,
-                        borderColor: "transparent",
-                      }
-                    : {
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "transparent",
-                        borderColor: "transparent",
-                      }
-                }
-                onPress={() => {
-                  setTradeType("Buy");
-                }}
-              >
-                <Text
-                  style={{
-                    color: tradeType === "Buy" ? "#FFF" : "gray",
-                    fontWeight: "600",
-                    fontSize: 14,
-                  }}
-                >
-                  Buy
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={
-                  tradeType === "Sell"
-                    ? {
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "#fc7a71",
-                        borderTopLeftRadius: 50,
-                        borderBottomLeftRadius: 50,
-                        borderTopRightRadius: 5,
-                        borderBottomRightRadius: 5,
-                        borderColor: "transparent",
-                      }
-                    : {
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "transparent",
-                        borderColor: "transparent",
-                      }
-                }
-                onPress={() => {
-                  setTradeType("Sell");
-                }}
-              >
-                <Text
-                  style={{
-                    color: tradeType === "Sell" ? "#FFF" : "gray",
-                    fontWeight: "600",
-                    fontSize: 14,
-                  }}
-                >
-                  Sell
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                borderRadius: 5,
-                height: 30,
-                backgroundColor: "#aba9a9",
-                paddingHorizontal: 10,
-              }}
-            >
-              <InfoIcon width={15} height={15} fill={"rgb(62, 60, 60)"} />
-              <Text
-                style={{
-                  color: "#191919",
-                  fontWeight: "600",
-                  fontSize: 14,
-                }}
-              >
-                Limit
-              </Text>
-              <ArrowDropDown width={10} height={10} fill={"rgb(62, 60, 60)"} />
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                borderRadius: 5,
-                height: 30,
-                backgroundColor: "#aba9a9",
-                paddingHorizontal: 10,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  handleSelect("subtraction");
-                }}
-              >
-                <StraightLine width={15} height={15} fill={"rgb(62, 60, 60)"} />
-              </TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#d8d5d5",
-                    fontWeight: "600",
-                    fontSize: 10,
-                  }}
-                >
-                  Price({symbol?.split("/")[1]})
-                </Text>
-                <TextInput
-                  keyboardType="numeric"
-                  style={{
-                    color: "#191919",
-                    fontWeight: "600",
-                    fontSize: 14,
-                  }}
-                  onChangeText={(item) => {
-                    const regExp = /[a-z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;
-                    let isMatch = !regExp.test(item);
-
-                    if (isMatch) {
-                      setPrice(Number(item));
-                    }
-                  }}
-                  defaultValue={String(price)}
-                  value={String(price)}
-                />
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  handleSelect("add");
-                }}
-              >
-                <PlusIcon width={15} height={15} fill={"rgb(62, 60, 60)"} />
-              </TouchableOpacity>
-            </View>
-          </View>
+          />
+          <TradeBuySell
+            tradeType={tradeType}
+            symbol={symbol}
+            price={price}
+            setTradeType={(e) => {
+              setTradeType(e);
+            }}
+            handleSelect={(e) => {
+              handleSelect(e);
+            }}
+            setPrice={(e) => {
+              setPrice(e);
+            }}
+          />
         </View>
       </View>
     </View>
